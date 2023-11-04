@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Page</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+        import { getDatabase,set,ref } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyB4IFyLYNlmu6eV2TJX8ES6xACydl2bzzU",
+          authDomain: "coh-auth.firebaseapp.com",
+          databaseURL: "https://coh-auth-default-rtdb.asia-southeast1.firebasedatabase.app/",
+          projectId: "coh-auth",
+          storageBucket: "coh-auth.appspot.com",
+          messagingSenderId: "94607897320",
+          appId: "1:94607897320:web:f7bc26674e162b9f5d4f5d",
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const database = getDatabase(app);
+
+        submitData.addEventListener('click',(e)=>{
+            e.preventDefault()
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+            if(password===confirmPassword){
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    set(ref(database, 'users/' + user.uid), {
+                        email: email,
+                        password: password
+                    })
+                        .then(() => {
+                            alert('User created successfully');
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(errorMessage);
+                });
+            }
+            else{
+                alert('Password not matching');
+            }
+        })
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Signup</h2>
+    <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="email" id="email" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="password">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="cpassword" required><br><br>
+
+        <input type="submit" id="submitData" value="Signup">
+    </form>
+
+    <div class="login-link">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+</body>
+</html>

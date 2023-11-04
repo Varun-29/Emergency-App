@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Booking Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        i:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/home"><i class="material-icons">arrow_back</i></a>
+        <h1>Booking Form</h1>
+        <form>
+            <label for="location">Enter Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter Location">
+
+            <label >Or</label></br>
+
+            <button id="currentLocation">Current Location</button></br></br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Your Name"></br></br>
+
+            <label for="phone">Ph no.:</label>
+            <input type="text" id="phone" name="phone"></br></br>
+
+            <label for="severity">Severity:</label>
+            <select id="severity" name="severity">
+                <option value="more_severe">More Severe</option>
+                <option value="severe">Severe</option>
+                <option value="moderate">Moderate</option>
+                <option value="less_severe">Less Severe</option>
+            </select>
+
+            <button type="submit" id="book">Book</button>
+        </form>
+    </div>
+</body>
+</html>

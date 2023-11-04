@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+        import { getDatabase,update,ref } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyB4IFyLYNlmu6eV2TJX8ES6xACydl2bzzU",
+          authDomain: "coh-auth.firebaseapp.com",
+          databaseURL: "https://coh-auth-default-rtdb.asia-southeast1.firebasedatabase.app/",
+          projectId: "coh-auth",
+          storageBucket: "coh-auth.appspot.com",
+          messagingSenderId: "94607897320",
+          appId: "1:94607897320:web:f7bc26674e162b9f5d4f5d",
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const database = getDatabase(app);
+
+        submitData.addEventListener('click',(e)=>{
+            e.preventDefault()
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    var lgDate = new Date();
+                    update(ref(database, 'users/' + user.uid), {
+                        last_login: lgDate,
+                    })
+                        .then(() => {
+                            alert('User logged in successfully');
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(errorMessage);
+                });
+        })
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+        
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="email" id="email" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" id="submitData" value="Login">
+    </form>
+
+    <div class="signup-link">
+        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+    </div>
+
+    <div class="forgot-password-link">
+        <p><a href="forgot_password.html">Forgot Password?</a></p>
+    </div>
+</body>
+</html>

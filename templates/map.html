@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Location Tracking</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <style>
+    #map {
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div>
+    <input type="text" id="latitude" placeholder="Enter latitude">
+    <input type="text" id="longitude" placeholder="Enter longitude">
+    <button id="showRouteButton">Show Route</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+  <script>
+    var map = L.map('map').setView([180, 0], 13); // Set initial map view
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker = L.marker([0, 0]).addTo(map); // Initialize a marker
+
+    // Create a routing control
+    var routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(0, 0), // Starting point, will be updated by user input
+        L.latLng(0, 0), // Destination point, will be updated by user input
+      ],
+    }).addTo(map);
+
+    function updateLocation() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude;
+          var lng = position.coords.longitude;
+
+          marker.setLatLng([lat, lng]);
+          map.setView([lat, lng], map.getZoom());
+        });
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+
+    // Update location every 5 seconds
+    setInterval(updateLocation, 5000);
+
+    // Add a click event listener to the "Show Route" button
+    document.getElementById("showRouteButton").addEventListener("click", function () {
+      var latitude = parseFloat(document.getElementById("latitude").value);
+      var longitude = parseFloat(document.getElementById("longitude").value);
+
+      // Update the destination waypoint
+      routingControl.setWaypoints([
+        L.latLng(marker.getLatLng().lat, marker.getLatLng().lng), // Starting point
+        L.latLng(latitude, longitude) // Destination point
+      ]);
+    });
+  </script>
+</body>
+</html>
