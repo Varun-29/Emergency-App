@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 from mail import *
 
 app = Flask(__name__)
@@ -33,6 +33,19 @@ def forgot_password():
 @app.route("/ambulance")
 def ambulance():
     return render_template("ambulance.html")
+
+@app.route('/book', methods=['POST'])
+def book():
+    # Extract data from the request, if necessary
+    data = request.form.get
+    print(data)
+    print(data['email'])
+    # Call your Python function here
+    result = sendMail(data)
+
+    # Return a response, possibly with the result
+    response = {"message": "Python function executed successfully", "result": result}
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run(debug=True)
