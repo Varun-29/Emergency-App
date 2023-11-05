@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Booking Form</title>
     <script type="module" src="{{url_for('static', filename='getCurrentLoc.js')}}"></script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbGU1gnEN2qOMGiSiyXBBjX-jfaYdFs8U&libraries=places"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,6 +45,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <a href="/"><i class="material-icons">arrow_back</i></a>
@@ -100,7 +102,7 @@
                     var hospitalsList = document.getElementById('hospitals-list');
 
                     var limitedResults = results.slice(0, 5);
-                    
+
                     limitedResults.forEach(function (place, index) {
                         var hospitalName = place.name;
                         var hospitalAddress = place.vicinity;
@@ -133,4 +135,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -11,8 +11,8 @@ def send_mail_alert(email,name,loc):
     string="I am "+name+"You are my emergency contact i need help...\nThis is my approximate location: "+loc
     server.sendmail('emergencyresponse80@gmail.com',email,string)
 
-def send_mail_booked(email,num,loc):
-    string="AMBULANCE HAS BEEN BOOKED!!! \n Drivers number: "+num+" \nhere trace the location of the ambulance"+loc;
+def send_mail_booked(email,loc,num):
+    string="AMBULANCE HAS BEEN BOOKED!!! \n Drivers number: "+num+" \nhere trace the location of the ambulance"+loc
     server.sendmail('emergencyresponse80@gmail.com',email,string+"\n\n our life saviours are arriving....\n\n\nget well soon @CodeHunters")
 
 def send_mail_driver(email):
