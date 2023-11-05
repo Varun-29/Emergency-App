@@ -5,6 +5,7 @@
     <title>Profile Page</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="module" src="{{url_for('static', filename='profile.js')}}"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,7 +60,7 @@
 
 <body>
     <h2>Profile</h2>
-    <form action="" method="post">
+    <form action="" method="get" id="profile-form">
         <a href="/"><i class="fa fa-arrow-left" style="position: absolute; top: 25px; left: 600px; font-size: 24px; color: black;"></i></a>
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required><br><br>
@@ -73,8 +74,9 @@
         <label for="age">Age:</label>
         <input type="number" id="age" name="age" required><br><br>
 
-        <label for="gender">Gender:</label>
+        <label for="Gender">Gender:</label>
         <select id="gender" name="gender">
+            <option value="select" selected disabled>Select</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
@@ -93,8 +95,7 @@
             <option value="AB-">AB-</option>
         </select><br><br>
 
-        <input type="submit" value="Update Profile" onclick="save()">
+        <input type="submit" value="Update Profile">
     </form>
 </body>
-
 </html>

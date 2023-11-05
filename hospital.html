@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Find Nearby Hospitals</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 40.7128, lng: -74.0060 }, // Default to New York City
+          zoom: 15
+        });
+
+        var service = new google.maps.places.PlacesService(map);
+
+        var request = {
+          location: new google.maps.LatLng(40.7128, -74.0060), // Default to New York City
+          radius: 5000, // 5000 meters (adjust as needed)
+          type: ['hospital']
+        };
+
+        service.nearbySearch(request, callback);
+
+        function callback(results, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            var hospitalsList = document.getElementById('hospitals-list');
+            
+            for (var i = 0; i < results.length; i++) {
+              var place = results[i];
+              var hospitalName = place.name;
+              var hospitalAddress = place.vicinity;
+              
+              // Create list item elements for each hospital
+              var listItem = document.createElement('li');
+              listItem.textContent = hospitalName + ' - ' + hospitalAddress;
+              
+              // Append the list item to the unordered list
+              hospitalsList.appendChild(listItem);
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Find Nearby Hospitals</h1>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    <h2>Hospitals List:</h2>
+    <ul id="hospitals-list"></ul>
+    <script>
+      // Initialize the map
+      initMap();
+    </script>
+  </body>
+</html>

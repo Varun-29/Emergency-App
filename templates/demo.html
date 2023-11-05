@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Form</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+        import { getDatabase,set,ref } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyB4IFyLYNlmu6eV2TJX8ES6xACydl2bzzU",
+          authDomain: "coh-auth.firebaseapp.com",
+          databaseURL: "https://coh-auth-default-rtdb.asia-southeast1.firebasedatabase.app/",
+          projectId: "coh-auth",
+          storageBucket: "coh-auth.appspot.com",
+          messagingSenderId: "94607897320",
+          appId: "1:94607897320:web:f7bc26674e162b9f5d4f5d",
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const database = getDatabase(app);
+        
+        const name = document.getElementById("name");
+        const email = document.getElementById("recipientEmail");
+        const location = document.getElementById("location");
+
+        auth.onAuthStateChanged((user) => {
+        if (user) {
+            name.value = user.name
+            email.value = user.email
+        } 
+        else {
+            alert('User not logged')
+        }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+        const locationInfo = document.getElementById("location");
+        if ("geolocation" in navigator) { 
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // Replace 'YOUR_NOMINATIM_API_URL' with the Nominatim API endpoint URL
+                const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+                fetch(nominatimUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.address) {
+                            const address = `${data.address.road}, ${data.address.city}, ${data.address.state}, ${data.address.country}`;
+                            locationInfo.value = `${address}`;
+                        } else {
+                            locationInfo.value = "Nominatim API request failed";
+                        }
+                    })
+                    .catch(error => {
+                        locationInfo.value = `Error: ${error.message}`;
+                    });
+            }, function(error) {
+                locationInfo.value = `Error: ${error.message}`;
+            });
+        } else {
+            locationInfo.value = "Geolocation is not available in this browser.";
+        }
+        });
+    </script>
+</head>
+<body>
+    <h1>Emergency Email Sender</h1>
+    <form id="emailForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Recipient Email:</label>
+        <input type="email" id="recipientEmail" name="recipientEmail" required><br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required><br><br>
+
+        <input type="button" value="Send Emergency Alert" onclick="sendEmail()">
+    </form>
+
+    <script>
+        function sendEmail() {
+            const name = document.getElementById("name").value;
+            const recipientEmail = document.getElementById("recipientEmail").value;
+            const location = document.getElementById("location").value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/send_email", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Email sent successfully!");
+                } else {
+                    alert("Failed to send the email. Please try again later.");
+                }
+            };
+
+            xhr.send(JSON.stringify({ name, recipientEmail, location }));
+        }
+    </script>
+</body>
+</html>

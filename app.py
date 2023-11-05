@@ -34,6 +34,10 @@ def forgot_password():
 def ambulance():
     return render_template("ambulance.html")
 
+@app.route("/demo")
+def demo():
+    return render_template("demo.html")
+
 @app.route('/book', methods=['POST'])
 def book():
     # Extract data from the request, if necessary

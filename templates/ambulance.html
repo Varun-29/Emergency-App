@@ -1,8 +1,11 @@
+<!DOCTYPE html>
 <html>
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Booking Form</title>
     <script type="module" src="{{url_for('static', filename='getCurrentLoc.js')}}"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,7 +44,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <a href="/"><i class="material-icons">arrow_back</i></a>
@@ -49,27 +51,23 @@
         <form action="/book" method="POST">
             <label for="location">Your Location:</label>
             <input type="text" id="location" name="location" placeholder="Enter Location">
-            <div id="address"></div>
 
-            <label for="hospital">Hospital:</label>
-            <select id="hospital" name="hospital">
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value="les_severe"></option>
-            </select>
+            <div id="map"></div>
+            <label for="hospital">Select Hospital:</label>
+            <div id="hospitals-list"></div>
 
-            <label for="name">Name:(optional)</label>
+            <label for="name">Name (optional):</label>
             <input type="text" id="name" name="name" placeholder="Your Name"></br></br>
-            
+
             <label for="email">Email:</label>
             <input type="text" id="email" name="email"></br></br>
 
-            <label for="phone">Ph no.:(optional)</label>
+            <label for="phone">Ph no. (optional):</label>
             <input type="text" id="phone" name="phone"></br></br>
 
             <label for="severity">Severity:</label>
             <select id="severity" name="severity">
+                <option value="select" selected disabled>Select</option>
                 <option value="more_severe">More Severe</option>
                 <option value="severe">Severe</option>
                 <option value="moderate">Moderate</option>
@@ -79,6 +77,60 @@
             <button type="submit" id="book" value="submit">Book</button>
         </form>
     </div>
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 12.942930, lng: 77.505290 },
+                zoom: 15
+            });
+
+            var service = new google.maps.places.PlacesService(map);
+
+            var request = {
+                location: new google.maps.LatLng(12.942930, 77.505290),
+                radius: 5000, // 5000 meters (adjust as needed)
+                type: ['hospital']
+            };
+
+            service.nearbySearch(request, callback);
+
+            function callback(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var hospitalsList = document.getElementById('hospitals-list');
+
+                    var limitedResults = results.slice(0, 5);
+                    
+                    limitedResults.forEach(function (place, index) {
+                        var hospitalName = place.name;
+                        var hospitalAddress = place.vicinity;
+
+                        // Create a div for each hospital entry
+                        var hospitalDiv = document.createElement('div');
+
+                        // Create a radio button for the hospital
+                        var radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = 'selectedHospital';
+                        radio.value = hospitalName;
+
+                        // Create a label for the radio button
+                        var label = document.createElement('label');
+                        label.appendChild(radio);
+                        label.appendChild(document.createTextNode(hospitalName + ' - ' + hospitalAddress));
+
+                        // Append the label to the hospital div
+                        hospitalDiv.appendChild(label);
+
+                        // Append the hospital div to the hospitals list
+                        hospitalsList.appendChild(hospitalDiv);
+
+                        // Add a line break
+                        hospitalsList.appendChild(document.createElement('br'));
+                    });
+                }
+            }
+        });
+    </script>
+</body>
 </html>
